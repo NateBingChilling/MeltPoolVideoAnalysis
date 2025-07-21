@@ -210,22 +210,25 @@ int main() {
 
   fit_ellipses(edited_images, original_images, csv, centers);
 
-  std::cout << "Fitting complete. Displaying images. Data has been written to a csv in " << local_path.string() << "\\data." << std::endl;
+  std::cout << "Fitting complete. Data has been written to a csv in " << local_path.string() << "\\data." << std::endl;
 
-  int index = 0;
-  CImgDisplay disp(original_images.at(index), filenames[index].c_str());
-  disp.move(0,0);
-  while (!disp.is_closed()) {
-    // ReSharper disable once CppDFAUnreachableCode
-    disp.wait();
-    if (disp.is_keyARROWRIGHT()) {
-      index = (index + 1) % original_images.size();
-    } else if (disp.is_keyARROWLEFT()) {
-      index = (index - 1 + original_images.size()) % original_images.size();
+
+  std::cout << "Display images? (Y/N)\nNOTE: This may only function on windows." << std::endl;
+  if (user_input()) {
+    int index = 0;
+    CImgDisplay disp(original_images.at(index), filenames[index].c_str());
+    disp.move(0,0);
+    while (!disp.is_closed()) {
+      // ReSharper disable once CppDFAUnreachableCode
+      disp.wait();
+      if (disp.is_keyARROWRIGHT()) {
+        index = (index + 1) % original_images.size();
+      } else if (disp.is_keyARROWLEFT()) {
+        index = (index - 1 + original_images.size()) % original_images.size();
+      }
+      disp.display(original_images[index].get_normalize(0,255));
+      disp.set_title(filenames[index].c_str());
     }
-    disp.display(original_images[index].get_normalize(0,255));
-    disp.set_title(filenames[index].c_str());
   }
-
   return 0;
 }
